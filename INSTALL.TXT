@@ -1,0 +1,11 @@
+-Place the sbs folder in your preferred directory.
+-Edit ./sbs/initscripts/pinset and change the variable
+INSTALLDIR to the directory you put the sbs folder. 
+-Move ./sbs/initscripts/pinset to your init scripts directory
+and configure upstart/xinit/rc.local/... to run it at startup.
+-Create a database named gpio and import the gpio.sql schema.
+-Edit ./sbs/modules/pydb.py and update the database connection information.
+-Edit ./sbs/modules/sbs.py and update the location to Adafruit_DHT
+accordingly.
+
+PLEASE HELP PUSH THIS IDEA FORWARD
