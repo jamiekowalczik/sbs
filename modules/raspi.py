@@ -2,6 +2,7 @@
 # Filename: raspi.py
 
 import RPi.GPIO as GPIO
+import sys
 
 GPIO.setwarnings(False)
 
