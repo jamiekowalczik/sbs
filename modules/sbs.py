@@ -46,17 +46,22 @@ def read_temp():
             temp_f = temp_c * 9.0 / 5.0 + 32.0
             return str(temp_f)
 
-def fillBucket(pin):
+def fillBucket(taskID):
     try:
+        result = pydb.runSQL("SELECT * FROM task WHERE taskID = "+str(taskID))
+	sensorID = result[0]['taskSensorID']
+	result = pydb.runSQL("SELECT * FROM sbs WHERE sbsID = "+str(sensorID))
+        depthpin = result[0]['sbsDepthPin']
         bucketFull = False
         while (bucketFull == False):
-            andata = raspi.getAnalogData(int(pin),0)
+            andata = raspi.getAnalogData(int(depthpin),0)
             if (float(andata) > EMPTYVAL):
                 changeLightStatus(GREENPIN)
                 switchFillValve(0)
                 print "EMPTY, filling... "+andata
             elif (float(andata) < FULLVAL):
                 changeLightStatus(REDPIN)
+                pydb.runSQL("UPDATE task set taskStatus = '0' WHERE taskID = "+str(taskID))
                 switchFillValve(1)
                 print "FULL, stop filling! "+andata
                 bucketFull = True
@@ -69,14 +74,20 @@ def fillBucket(pin):
         switchFillValve(1)
         sys.exit(2)
 
-def emptyBucket(pin):
+def emptyBucket(taskID):
     try:
+        result = pydb.runSQL("SELECT * FROM task WHERE taskID = "+str(taskID))
+        sensorID = result[0]['taskSensorID']
+        result = pydb.runSQL("SELECT * FROM sbs WHERE sbsID = "+str(sensorID))
+        depthpin = result[0]['sbsDepthPin']
+        print "depth pin: "+str(depthpin)
         bucketEmpty = False
         while (bucketEmpty == False):
-            andata = raspi.getAnalogData(int(pin),0)
+            andata = raspi.getAnalogData(int(depthpin),0)
             if (float(andata) > EMPTYVAL):
 		print "EMPTY, waiting 15 seconds then closing valve!... "+andata
                 changeLightStatus(GREENPIN)
+                pydb.runSQL("UPDATE task set taskStatus = '0' WHERE taskID = "+str(taskID))
                 time.sleep(15)
                 switchEmptyValve(1)
                 bucketEmpty = True
@@ -95,21 +106,27 @@ def emptyBucket(pin):
 
 def changeLightStatus(pinOn):
     # Turn all pins off
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(REDPIN)+"';")
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(YELLOWPIN)+"';")
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(GREENPIN)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(REDPIN)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(YELLOWPIN)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '0' WHERE pinNumber = '"+str(GREENPIN)+"';")
+    raspi.setPin(int(REDPIN),0)
+    raspi.setPin(int(YELLOWPIN),0)
+    raspi.setPin(int(GREENPIN),0)
 
     # Turn on pin
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '1' WHERE pinNumber = '"+str(pinOn)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '1' WHERE pinNumber = '"+str(pinOn)+"';")
+    raspi.setPin(int(pinOn),1)
 
 def switchFillValve(pinStatus):
     #pinStatus = 0 is open, pinStatus = 1 is closed
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '"+str(pinStatus)+"' WHERE pinNumber = '"+str(FILLVALVEPIN)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '"+str(pinStatus)+"' WHERE pinNumber = '"+str(FILLVALVEPIN)+"';")
+    raspi.setPin(int(FILLVALVEPIN),int(pinStatus))
 
 def switchEmptyValve(pinStatus):
     #print "running sql "+str(pinStatus)+"  "+str(EMPTYVALVEPIN)
     #pinStatus = 0 is open, pinStatus = 1 is closed
-    pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '"+str(pinStatus)+"' WHERE pinNumber = '"+str(EMPTYVALVEPIN)+"';")
+    #pydb.runSQL("update `gpio`.`pinStatus` set pinStatus = '"+str(pinStatus)+"' WHERE pinNumber = '"+str(EMPTYVALVEPIN)+"';")
+    raspi.setPin(int(EMPTYVALVEPIN),int(pinStatus))
 
 def getTempHumidity(pin):
    try:

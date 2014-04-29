@@ -87,3 +87,12 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
 	print err
 	sys.exit(1)
 
+def setPin(pin,value):
+    GPIO.setmode(GPIO.BCM)
+    try:
+        #print "Setting pin: "+str(pin)+" Value: "+str(value)
+        GPIO.setup(pin,GPIO.OUT)
+        GPIO.output(pin,value)
+    except Exception, err:
+        print err
+        sys.exit(1)
