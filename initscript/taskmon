@@ -13,4 +13,6 @@ INSTALLDIR=/root/sbs
 
 export PYTHONPATH=$PYTHONPATH:$INSTALLDIR/modules
 $INSTALLDIR/daemon/taskmon.py &
+$INSTALLDIR/daemon/pinset.py &
+$INSTALLDIR/daemon/flask-web.py &
 exit 0

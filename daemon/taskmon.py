@@ -11,7 +11,7 @@ import itertools
 GPIO.setmode(GPIO.BCM)
 
 while True:
-    result = pydb.runSQL("SELECT * FROM task WHERE taskStatus = 1");
+    result = pydb.runSQL("SELECT * FROM task WHERE taskStatus = 1")
     for row in result:
         if (str(row['taskName']) == "Empty"):
             print "Empty Bucket"
@@ -22,4 +22,3 @@ while True:
             pydb.runSQL("UPDATE task set taskStatus = '2' WHERE taskID = "+str(row['taskID']))
             sbs.fillBucket(row['taskID'])
     time.sleep(1)
-
