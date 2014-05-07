@@ -28,7 +28,9 @@ CREATE TABLE `sbs` (
   `sbsTempPin` int(11) NOT NULL,
   `sbsDepthPin` int(11) NOT NULL,
   `sbsFillPin` int(11) NOT NULL,
+  `sbsFillPinStatus` int(11) NOT NULL,
   `sbsEmptyPin` int(11) NOT NULL,
+  `sbsEmptyPinStatus` int(11) NOT NULL,
   `sbsFullVal` int(11) NOT NULL,
   `sbsEmptyVal` int(11) NOT NULL,
   PRIMARY KEY (`sbsID`)
@@ -41,7 +43,7 @@ CREATE TABLE `sbs` (
 
 LOCK TABLES `sbs` WRITE;
 /*!40000 ALTER TABLE `sbs` DISABLE KEYS */;
-INSERT INTO `sbs` VALUES (1,'Smart Bucket',18,0,24,23,720,790);
+INSERT INTO `sbs` VALUES (1,'Smart Bucket',18,0,24,1,23,1,720,790);
 /*!40000 ALTER TABLE `sbs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,6 +59,7 @@ CREATE TABLE `station` (
   `stationName` varchar(255) NOT NULL,
   `stationTempHumidPin` int(11) NOT NULL,
   `stationSolarPin` int(11) NOT NULL,
+  `sbsTempPin` int(11) NOT NULL,
   `stationCamURL` varchar(255) NOT NULL,
   PRIMARY KEY (`stationID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
@@ -68,7 +71,7 @@ CREATE TABLE `station` (
 
 LOCK TABLES `station` WRITE;
 /*!40000 ALTER TABLE `station` DISABLE KEYS */;
-INSERT INTO `station` VALUES (1,'My Green House',4,1,'http://192.168.2.131/img/snapshot.cgi');
+INSERT INTO `station` VALUES (1,'My Green House',4,1,18,'http://192.168.2.131/img/snapshot.cgi');
 /*!40000 ALTER TABLE `station` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +92,7 @@ CREATE TABLE `task` (
   `taskStartTime` datetime NOT NULL,
   `taskEndTime` datetime DEFAULT NULL,
   PRIMARY KEY (`taskID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +101,7 @@ CREATE TABLE `task` (
 
 LOCK TABLES `task` WRITE;
 /*!40000 ALTER TABLE `task` DISABLE KEYS */;
-INSERT INTO `task` VALUES (1,'Fill','Smart Bucket',1,2,'Fill Smart Bucket','2014-04-27 20:24:00','0000-00-00 00:00:00'),(2,'Empty','Smart Bucket',1,2,'Empty Smart Bucket','2014-04-28 22:34:00',NULL);
+INSERT INTO `task` VALUES (1,'Fill','Smart Bucket',1,0,'Fill Smart Bucket','2014-04-27 20:24:00','2014-05-02 23:10:09'),(2,'Empty','Smart Bucket',1,0,'Empty Smart Bucket','2014-04-28 22:34:00','2014-05-02 23:11:53'),(3,'Fill','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00',NULL),(4,'Fill','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-02 23:38:55'),(5,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-02 23:40:21'),(6,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-02 23:57:32'),(7,'Fill','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-02 23:59:47'),(8,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-03 00:01:15'),(9,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-03 00:02:25'),(10,'Fill','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00',NULL),(11,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00',NULL),(12,'Empty','Smart Bucket',1,0,'Started from web api','0000-00-00 00:00:00','2014-05-03 01:01:03'),(13,'Fill','Smart Bucket',1,0,'Started from web api','2014-05-03 22:51:13','2014-05-03 22:52:18'),(14,'Empty','Smart Bucket',1,0,'Started from web api','2014-05-03 22:52:34','2014-05-03 22:53:59'),(15,'Empty','Smart Bucket',1,0,'Started from web api','2014-05-06 19:24:48','2014-05-07 19:27:45');
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -111,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-28 23:32:16
+-- Dump completed on 2014-05-07 19:45:34
